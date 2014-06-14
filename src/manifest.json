@@ -1,0 +1,15 @@
+{
+  "manifest_version":     2,
+  "name":                 "Pixiv Right-Click Downloader",
+  "version":              "1.0",
+  "description":          "Right-Click to Save Pictures from Pixiv",
+  "background":           {
+    "page":                 "background.html"
+  },
+  "permissions":          [
+    "downloads", "contextMenus",
+    "*://www.pixiv.com/",
+    "*://www.pixiv.net/"
+  ]
+  
+}

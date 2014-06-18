@@ -1,16 +1,18 @@
 // 
 
 var sites_pattern = {
-  "pixiv":  {"pattern": /(\/works\/|illust_id\=)([0-9]*)/, "domain_pattern": /www\.pixiv\.(com|net)/, "url":""}
+  "pixiv":  {"key": 2, "pattern": /(\/works\/|illust_id\=)([0-9]*)/, "domain_pattern": /www\.pixiv\.(com|net)/, "url":"http://www.pixiv.com/works/{%s}/large"}
 };
 function do_pixiv_grab (info, tab)
 {
   for (var i in sites_pattern)
   {
-    if (info.pageUrl.match(sites_pattern[i]['domain_pattern']) && info.pageUrl.match(sites_pattern[i]['pattern']))
+    var match1  = info.pageUrl.match(sites_pattern[i]['domain_pattern']);
+    var match2  = info.pageUrl.match(sites_pattern[i]['pattern']);
+    if (match1 !== null && match2 !== null)
     {
-      return PageRetriever(i, sites_pattern[i][url]);
-      break;
+      var url = sites_pattern[i]['url'].replace('{%s}', match2[sites_pattern[i]['key']]);
+      return new PageRetriever(i, url);
     }
   }
   return true;
@@ -51,7 +53,8 @@ function PageRetriever (site, url)
         var filename = parser.getSite() + "_" + parser.getId() + parser.getTitle() + ".jpg";
         chrome.downloads.download({
           "url":        $downloadUrls[i],
-          "filename":   filename
+          "filename":   filename,
+          "headers":    [{"name": "Referer", "value": url}]
         }, check_download_finish);
       }
     }
@@ -60,9 +63,9 @@ function PageRetriever (site, url)
 
 function PageParser (site, content)
 {
-  var $id, $title, $author;
-  var $tags     = [];
-  var $dlUrls   = [];
+  this.$id = '', this.$title = '', this.$author = '';
+  this.$tags     = [];
+  this.$dlUrls   = [];
   
   switch (site)
   {
@@ -70,13 +73,21 @@ function PageParser (site, content)
       this.pixiv(content);
       break;
   }
-  return new Artwork(site, $id, $title, $author, $tags, $dlUrls);
+  return new Artwork(site, this.$id, this.$title, this.$author, this.$tags, this.$dlUrls);
 }
 PageParser.prototype.pixiv    = function (content)
 {
+  var urls  = [];
+  $.each($('img', content), function(i, e){
+    var src = $(e).attr('src');
+    urls.push(src);
+  });
+  this.$dlUrls  = urls;
 }
 
-
+function check_download_finish (dlitem)
+{
+}
 
 chrome.contextMenus.create({
   "id":                     "pixiv.retriever.download",

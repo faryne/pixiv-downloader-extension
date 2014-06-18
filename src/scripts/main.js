@@ -50,11 +50,7 @@ function PageRetriever (site, url)
       console.log('a');
       parser  = new PageParser(site, html);
       console.log('b');
-      
-      
-    }
-  });
-  // 開啟下載
+      // 開啟下載
       $downloadUrls   = parser.getDlUrls();
       console.log('c');
       // if ($downloadUrls.length == 0)
@@ -63,7 +59,7 @@ function PageRetriever (site, url)
       // }
       console.log($downloadUrls);
       console.log('d');
-  for (var i in $downloadUrls)
+      for (var i in $downloadUrls)
       {
         var filename = parser.getSite() + "_" + parser.getId() + parser.getTitle() + ".jpg";
         console.log('d-1');
@@ -76,6 +72,9 @@ function PageRetriever (site, url)
         console.log('d-2');
       }
       console.log('e');
+    }
+  });
+  
 }
 
 function PageParser (site, content)

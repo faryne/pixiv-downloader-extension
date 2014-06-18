@@ -8,8 +8,8 @@
   },
   "permissions":          [
     "downloads", "contextMenus",
-    "*://www.pixiv.com/",
-    "*://www.pixiv.net/"
+    "*://*.pixiv.com/",
+    "*://*.pixiv.net/"
   ]
   
 }

@@ -34,31 +34,48 @@ Artwork.prototype.getAuthor   = function(){return this.author;}
 Artwork.prototype.getTagsStr  = function(){return this.tags.join("_");}
 Artwork.prototype.getDlUrls   = function(){return this.downloadUrls;}
 
+var htmlContent = '';
+function setContent (html)
+{
+  htmlContent = html;
+}
+
 function PageRetriever (site, url)
 {
   $.ajax({
     "url":      url,
     "type":     "get",
-    "success":  function (content)
+    "success":  function(html)
     {
-      var parser  = new PageParser(site, content);
-      // 開啟下載
+      console.log('a');
+      parser  = new PageParser(site, html);
+      console.log('b');
+      
+      
+    }
+  });
+  // 開啟下載
       $downloadUrls   = parser.getDlUrls();
-      if ($downloadUrls.length == 0)
-      {
-        return false;
-      }
-      for (var i in $downloadUrls)
+      console.log('c');
+      // if ($downloadUrls.length == 0)
+      // {
+        // return false;
+      // }
+      console.log($downloadUrls);
+      console.log('d');
+  for (var i in $downloadUrls)
       {
         var filename = parser.getSite() + "_" + parser.getId() + parser.getTitle() + ".jpg";
+        console.log('d-1');
+        console.log($downloadUrls[i]);
         chrome.downloads.download({
           "url":        $downloadUrls[i],
-          "filename":   filename,
+          // "filename":   filename,
           "headers":    [{"name": "Referer", "value": url}]
         }, check_download_finish);
+        console.log('d-2');
       }
-    }
-  })
+      console.log('e');
 }
 
 function PageParser (site, content)
@@ -85,8 +102,10 @@ PageParser.prototype.pixiv    = function (content)
   this.$dlUrls  = urls;
 }
 
-function check_download_finish (dlitem)
+function check_download_finish (dlitem_id)
 {
+  // var a = chrome.downloads.search({"id": dlitem_id});
+  // alert(a);
 }
 
 chrome.contextMenus.create({

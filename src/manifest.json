@@ -7,7 +7,7 @@
     "page":                 "background.html"
   },
   "permissions":          [
-    "downloads", "contextMenus",
+    "downloads", "contextMenus", "cookies",
     "*://*.pixiv.com/",
     "*://*.pixiv.net/"
   ]

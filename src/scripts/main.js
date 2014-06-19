@@ -45,33 +45,27 @@ function PageRetriever (site, url)
   $.ajax({
     "url":      url,
     "type":     "get",
+    "beforeSend": function (request)
+    {
+      request.setRequestHeader("Referer", url.replace('/large'));
+    },
     "success":  function(html)
     {
-      console.log('a');
       parser  = new PageParser(site, html);
-      console.log('b');
       // 開啟下載
       $downloadUrls   = parser.getDlUrls();
-      console.log('c');
       // if ($downloadUrls.length == 0)
       // {
         // return false;
       // }
-      console.log($downloadUrls);
-      console.log('d');
       for (var i in $downloadUrls)
       {
-        var filename = parser.getSite() + "_" + parser.getId() + parser.getTitle() + ".jpg";
-        console.log('d-1');
-        console.log($downloadUrls[i]);
+        var filename = parser.getSite() + "_" + i + "_" + parser.getId() + "_" + parser.getTitle() + ".jpg";
         chrome.downloads.download({
           "url":        $downloadUrls[i],
-          // "filename":   filename,
-          "headers":    [{"name": "Referer", "value": url}]
+          "filename":   filename
         }, check_download_finish);
-        console.log('d-2');
       }
-      console.log('e');
     }
   });
   
@@ -93,26 +87,33 @@ function PageParser (site, content)
 }
 PageParser.prototype.pixiv    = function (content)
 {
-  var urls  = [];
+  var urls  = [], main_id = '', title = '';
   $.each($('img', content), function(i, e){
+    if (i == 0)
+    {
+      title       = $(e).attr('alt');
+      var params  = $(e).attr('src').split('/');
+      main_id     = params[params.length - 1].substr(0, params[params.length - 1].length - 15);
+    }
     var src = $(e).attr('src');
     urls.push(src);
   });
+  this.$title   = title;
+  this.$id      = main_id;
   this.$dlUrls  = urls;
 }
 
 function check_download_finish (dlitem_id)
 {
-  // var a = chrome.downloads.search({"id": dlitem_id});
-  // alert(a);
+  console.log(dlitem_id);
 }
 
 chrome.contextMenus.create({
   "id":                     "pixiv.retriever.download",
   "title":                  "下載此作品的圖片",
   "documentUrlPatterns":    [
-    "*://www.pixiv.net/member_illust.php?mode=medium&illust_id=*",
-    "*://www.pixiv.net/member_illust.php?illust_id=*&mode=medium",
+    // "*://www.pixiv.net/member_illust.php?mode=medium&illust_id=*",
+    // "*://www.pixiv.net/member_illust.php?illust_id=*&mode=medium",
     "*://www.pixiv.com/works/*"
   ],
   "onclick":                do_pixiv_grab

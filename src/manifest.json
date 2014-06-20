@@ -1,15 +1,14 @@
 {
   "manifest_version":     2,
-  "name":                 "Pixiv Right-Click Downloader",
+  "name":                 "難以名狀的右鍵載圖姬",
   "version":              "1.0",
   "description":          "Right-Click to Save Pictures from Pixiv",
   "background":           {
     "page":                 "background.html"
   },
   "permissions":          [
-    "downloads", "contextMenus", "cookies",
-    "*://*.pixiv.com/",
-    "*://*.pixiv.net/"
+    "downloads", "contextMenus", 
+    "http://api.neko.maid.tw/"
   ]
   
 }

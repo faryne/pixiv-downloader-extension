@@ -47,13 +47,22 @@ function PageRetriever (site, url)
     "type":     "get",
     "beforeSend": function (request)
     {
-      request.setRequestHeader("Referer", url.replace('/large'));
+      // request.setRequestHeader("Referer", url);
+      // var cookies = [];
+      // chrome.cookies.getAll({"url": url}, function(cookie){
+        // for (var i in cookie)
+        // {
+          // cookies.push(cookie[i].name + '=' + cookie[i].value);
+        // }
+      // });
+      // request.setRequestHeader("Cookie", cookies.join('&'));
     },
     "success":  function(html)
     {
       parser  = new PageParser(site, html);
       // 開啟下載
       $downloadUrls   = parser.getDlUrls();
+      console.log($downloadUrls);
       // if ($downloadUrls.length == 0)
       // {
         // return false;
@@ -69,6 +78,18 @@ function PageRetriever (site, url)
     }
   });
   
+}
+
+function getCookie (url)
+{
+  var cookies = [];
+  chrome.cookies.getAll({"url": url}, function(cookie){
+    for (var i in cookie)
+    {
+      cookies.push(cookie[i].name + '=' + cookie[i].value);
+    }
+  });
+  return cookies.join('&');
 }
 
 function PageParser (site, content)
@@ -118,3 +139,21 @@ chrome.contextMenus.create({
   ],
   "onclick":                do_pixiv_grab
 });
+
+chrome.webRequest.onBeforeSendHeaders.addListener(function (details)
+{
+  if (typeof details.requestHeaders === 'undefined')
+  {
+    return;
+  }
+  for (var i in details)
+  {
+  console.log(details.requestHeaders[i].name);
+    if (details.requestHeaders[i].name == 'Referer' || details.requestHeaders[i].name == 'Cookie')
+    {
+      details.requestHeaders[i].value = details.requestHeaders[i].value;
+      continue;
+    }
+  }
+  return {requestHeaders: details.requestHeaders, "type": ["xmlhttprequest", "image"]};
+}, {urls: ["*://*.pxiv.com/*", "*://*.pixiv.net/*"]});

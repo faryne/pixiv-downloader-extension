@@ -32,19 +32,16 @@ function do_grab (info, tab)
   // 如果網站與id不為空才繼續下載
   if (site !== '' && id !== '')
   {
-    console.log('a');
     $.ajax({
       'url':      'http://api.neko.maid.tw/retrieve.json?' + $.param({site: site, artwork_id: id, r: Math.random()}),
       'type':     'get',
-      // 'data':     {"site": site, "id": id},
       'dataType': 'json',
       'success':  function (obj)
       {
         if (typeof obj === 'undefined' || typeof obj.error !== "undefined") {
           return false;
         }
-        console.log('b');
-        var filename  = obj.from + '_' + obj.artwork_id + '_{%s1}_' + obj.title + "_{%s2}";
+        var filename  = obj.from + '_{%s1}_' + obj.title + "_{%s2}";
         for (var i in obj.photos)
         {
           var urn = new URI(obj.photos[i].url);
@@ -59,8 +56,6 @@ function do_grab (info, tab)
   {
   // 否則跳出錯誤訊息
   }
-  console.log(site);
-  console.log(id);
 }
 
 function check_download_finish (dlitem_id)

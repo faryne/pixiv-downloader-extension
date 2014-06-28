@@ -46,7 +46,7 @@ function do_grab (info, tab)
         for (var i in obj.photos)
         {
           var urn = new URI(obj.photos[i].url);
-          chrome.notifications.update('StartDownload', {"message": "下載圖片中，第"+(i+1)+"/"+obj.photos.length+"張"}, function(id){});
+          chrome.notifications.update('StartDownload', {"type": "basic", "iconUrl": "img/icon32.png", "title": "下載圖片（共"+obj.photos.length+"張）", "message": "下載圖片中，第"+(i+1)+"/"+obj.photos.length+"張"}, function(id){});
           chrome.downloads.download({
             "url":        obj.photos[i].url,
             "filename":   filename.replace('{%s1}', i).replace('{%s2}', urn.filename(true))
@@ -61,22 +61,10 @@ function do_grab (info, tab)
   }
 }
 
-// var timer = [];
 function check_download_finish (dlitem_id)
 {
-  // var k = "dlwatcher_" + dlitem_id;
-  // timer[k]  = setInterval(function(){
-    // chrome.downloads.search({"id": dlitem_id}, function(obj){
-      // if (obj[0].state === 'complete')
-      // {
-        // clearInterval(timer[k]);
-      // }
-    // });
-  // }, 100);
   console.log(dlitem_id);
 }
-
-
 
 chrome.contextMenus.create({
   "id":                     "pixiv.retriever.download",

@@ -6,8 +6,12 @@
   "background":           {
     "page":                 "background.html"
   },
+  "icons":                {
+    "57":   "img/icon57.png",
+    "32":   "img/icon32.png"
+  },
   "permissions":          [
-    "downloads", "contextMenus", 
+    "downloads", "contextMenus", "notifications",
     "http://api.neko.maid.tw/"
   ]
   

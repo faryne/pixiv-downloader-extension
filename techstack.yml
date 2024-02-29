@@ -2,7 +2,7 @@ repo_name: faryne/pixiv-downloader-extension
 report_id: c90a58f68eb2f5ec3e842dd6123a7d85
 version: 0.1
 repo_type: Public
-timestamp: '2024-02-16T06:07:57+00:00'
+timestamp: '2024-02-29T20:05:20+00:00'
 requested_by: faryne
 provider: github
 branch: master
